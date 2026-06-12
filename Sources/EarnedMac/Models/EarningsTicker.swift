@@ -15,6 +15,7 @@ final class EarningsTicker: ObservableObject {
     @Published private(set) var input: PayInput
 
     private var timer: Timer?
+    private let headlineStartTime: Date
     private var lastMilestoneAmount: Double
     private var isRequestingNotificationPermission = false
     private var didFailAutomaticNotificationPermissionRequest = false
@@ -25,6 +26,7 @@ final class EarningsTicker: ObservableObject {
     init(input: PayInput, currentTime: Date = Date()) {
         self.input = input
         self.currentTime = currentTime
+        self.headlineStartTime = currentTime
         self.lastMilestoneAmount = Self.lastMilestoneAmount(input: input, currentTime: currentTime)
         start()
     }
@@ -43,6 +45,10 @@ final class EarningsTicker: ObservableObject {
 
     var menuBarTitle: String {
         PayCalculator.formatWholeWon(earned)
+    }
+
+    var headlineMessage: String {
+        EarnedHeadline.message(at: currentTime, since: headlineStartTime)
     }
 
     func apply(_ input: PayInput) {

@@ -15,4 +15,24 @@ final class EarnedHeadlineTests: XCTestCase {
         XCTAssertEqual(EarnedHeadline.message(at: EarnedHeadline.messages.count), "지금까지 번 돈")
         XCTAssertEqual(EarnedHeadline.message(at: -1), EarnedHeadline.messages.last)
     }
+
+    func testHeadlineTimeLookupAdvancesEveryThreeSeconds() {
+        let startTime = Date(timeIntervalSince1970: 1_800_000_000)
+
+        XCTAssertEqual(EarnedHeadline.message(at: startTime, since: startTime), "지금까지 번 돈")
+        XCTAssertEqual(
+            EarnedHeadline.message(
+                at: startTime.addingTimeInterval(EarnedHeadline.rotationIntervalSeconds),
+                since: startTime
+            ),
+            "1일부터 지금까지"
+        )
+        XCTAssertEqual(
+            EarnedHeadline.message(
+                at: startTime.addingTimeInterval(EarnedHeadline.rotationIntervalSeconds * 2),
+                since: startTime
+            ),
+            "여태까지 번 돈"
+        )
+    }
 }

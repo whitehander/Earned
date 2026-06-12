@@ -1,3 +1,5 @@
+import Foundation
+
 public enum EarnedHeadline {
     public static let rotationIntervalSeconds = 3.0
 
@@ -23,5 +25,14 @@ public enum EarnedHeadline {
         let count = messages.count
         let normalizedIndex = ((index % count) + count) % count
         return messages[normalizedIndex]
+    }
+
+    public static func message(at currentTime: Date, since startTime: Date) -> String {
+        message(at: index(at: currentTime, since: startTime))
+    }
+
+    public static func index(at currentTime: Date, since startTime: Date) -> Int {
+        let elapsedSeconds = max(0, currentTime.timeIntervalSince(startTime))
+        return Int(elapsedSeconds / rotationIntervalSeconds) % messages.count
     }
 }
