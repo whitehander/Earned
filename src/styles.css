@@ -139,6 +139,29 @@ h2 {
   flex-shrink: 0;
 }
 
+.download-link {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--control-border);
+  border-radius: 999px;
+  padding: 0 15px;
+  background: var(--icon-bg);
+  color: var(--text-strong);
+  font-size: 14px;
+  font-weight: 900;
+  text-decoration: none;
+  transition:
+    box-shadow 150ms ease,
+    transform 150ms ease;
+}
+
+.download-link:hover {
+  box-shadow: 0 8px 18px rgba(0, 111, 238, 0.22);
+  transform: translateY(-1px);
+}
+
 .icon-button {
   width: 44px;
   height: 44px;

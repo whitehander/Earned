@@ -30,6 +30,10 @@ describe("App", () => {
     // Then: 월 1일부터 오늘까지의 수익만 사용자에게 크게 보인다.
     expect(screen.getByDisplayValue("6,000,000")).toBeVisible()
     expect(screen.getByRole("heading", { name: "지금까지 번 돈" })).toBeVisible()
+    expect(screen.getByRole("link", { name: "Mac 다운로드" })).toHaveAttribute(
+      "href",
+      "https://github.com/whitehander/Earned/releases/latest/download/Earned-macOS.zip",
+    )
     expect(screen.getByTestId("earned-amount")).toHaveClass("amount-value")
     expect(screen.getByTestId("earned-amount")).toHaveTextContent("2,000,000.00원")
     expect(screen.queryByRole("button", { name: "초당 1.16원" })).not.toBeInTheDocument()

@@ -24,6 +24,8 @@ const defaultPayInput: PayInput = {
 
 const settingsStorageKey = "earned-settings"
 const themeStorageKey = "earned-theme"
+const macDownloadUrl =
+  "https://github.com/whitehander/Earned/releases/latest/download/Earned-macOS.zip"
 
 export function App() {
   const [monthlySalary, setMonthlySalary] = useState(
@@ -162,6 +164,9 @@ export function App() {
             </h1>
           </div>
           <div className="top-actions">
+            <a className="download-link" href={macDownloadUrl}>
+              Mac 다운로드
+            </a>
             <button
               className="icon-button"
               type="button"
