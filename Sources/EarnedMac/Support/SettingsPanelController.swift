@@ -27,9 +27,7 @@ final class SettingsPanelController {
         panel.level = .floating
         panel.center()
         panel.contentViewController = NSHostingController(
-            rootView: SettingsSheet(ticker: ticker) { [weak self] in
-                self?.close()
-            }
+            rootView: SettingsSheet(ticker: ticker)
         )
         self.panel = panel
         panel.makeKeyAndOrderFront(nil)

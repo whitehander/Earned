@@ -2,18 +2,15 @@ import Foundation
 
 public struct PayInput: Equatable, Sendable {
     public let monthlySalary: Double
-    public let monthlyHours: Double
     public let alertUnit: Double
 
-    public init(monthlySalary: Double, monthlyHours: Double, alertUnit: Double) {
+    public init(monthlySalary: Double, alertUnit: Double) {
         self.monthlySalary = monthlySalary
-        self.monthlyHours = monthlyHours
         self.alertUnit = alertUnit
     }
 
     public static let defaultValue = PayInput(
         monthlySalary: 3_000_000,
-        monthlyHours: 160,
         alertUnit: 1_000
     )
 }
@@ -24,7 +21,7 @@ public enum PayInputResult: Equatable, Sendable {
 }
 
 public enum PayCalculator {
-    public static let invalidInputMessage = "월급과 월 근무시간을 0보다 크게 입력하세요."
+    public static let invalidInputMessage = "월급을 0보다 크게 입력하세요."
 
     public static func parseCurrencyInput(_ value: String) -> Double {
         let normalized = value.replacingOccurrences(of: ",", with: "").trimmingCharacters(in: .whitespaces)
@@ -42,17 +39,15 @@ public enum PayCalculator {
 
     public static func parsePayInput(
         monthlySalary: Double,
-        monthlyHours: Double,
         alertUnit: Double
     ) -> PayInputResult {
-        guard monthlySalary.isFinite, monthlyHours.isFinite, monthlySalary > 0, monthlyHours > 0 else {
+        guard monthlySalary.isFinite, monthlySalary > 0 else {
             return .invalid(invalidInputMessage)
         }
 
         let normalizedAlertUnit = alertUnit.isFinite && alertUnit > 0 ? alertUnit : 1_000
         return .valid(PayInput(
             monthlySalary: monthlySalary,
-            monthlyHours: monthlyHours,
             alertUnit: normalizedAlertUnit
         ))
     }
@@ -63,10 +58,7 @@ public enum PayCalculator {
         calendar: Calendar = .current
     ) -> Double {
         let daysInMonth = Double(Self.daysInMonth(for: currentTime, calendar: calendar))
-        let averageWorkHoursPerDay = input.monthlyHours / daysInMonth
-        let hourlyPay = input.monthlySalary / input.monthlyHours
-        let averageDailyPay = hourlyPay * averageWorkHoursPerDay
-        return averageDailyPay / 24 / 3_600
+        return input.monthlySalary / daysInMonth / 24 / 3_600
     }
 
     public static func monthElapsedSeconds(

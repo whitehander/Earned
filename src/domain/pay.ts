@@ -1,6 +1,5 @@
 export type PayInput = {
   readonly monthlySalary: number
-  readonly monthlyHours: number
   readonly alertUnit: number
 }
 
@@ -8,7 +7,7 @@ export type PayInputResult =
   | { readonly kind: "valid"; readonly value: PayInput }
   | { readonly kind: "invalid"; readonly message: string }
 
-const invalidInputMessage = "월급과 월 근무시간을 0보다 크게 입력하세요."
+const invalidInputMessage = "월급을 0보다 크게 입력하세요."
 
 export function parseCurrencyInput(value: string): number {
   const normalized = value.replaceAll(",", "").trim()
@@ -24,16 +23,12 @@ export function formatCurrencyInput(value: string): string {
   return Number(digits).toLocaleString("ko-KR")
 }
 
-export function parsePayInput(
-  monthlySalary: number,
-  monthlyHours: number,
-  alertUnit: number,
-): PayInputResult {
-  if (!Number.isFinite(monthlySalary) || !Number.isFinite(monthlyHours)) {
+export function parsePayInput(monthlySalary: number, alertUnit: number): PayInputResult {
+  if (!Number.isFinite(monthlySalary)) {
     return { kind: "invalid", message: invalidInputMessage }
   }
 
-  if (monthlySalary <= 0 || monthlyHours <= 0) {
+  if (monthlySalary <= 0) {
     return { kind: "invalid", message: invalidInputMessage }
   }
 
@@ -41,7 +36,6 @@ export function parsePayInput(
     kind: "valid",
     value: {
       monthlySalary,
-      monthlyHours,
       alertUnit: Number.isFinite(alertUnit) && alertUnit > 0 ? alertUnit : 1000,
     },
   }
@@ -49,10 +43,7 @@ export function parsePayInput(
 
 export function calculateWonPerSecond(input: PayInput, currentTime: number): number {
   const daysInMonth = getDaysInMonth(currentTime)
-  const averageWorkHoursPerDay = input.monthlyHours / daysInMonth
-  const hourlyPay = input.monthlySalary / input.monthlyHours
-  const averageDailyPay = hourlyPay * averageWorkHoursPerDay
-  return averageDailyPay / 24 / 3600
+  return input.monthlySalary / daysInMonth / 24 / 3600
 }
 
 export function calculateMonthElapsedSeconds(currentTime: number): number {

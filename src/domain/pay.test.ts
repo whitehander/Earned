@@ -15,7 +15,6 @@ describe("pay domain", () => {
       calculateWonPerSecond(
         {
           monthlySalary: 3000000,
-          monthlyHours: 160,
           alertUnit: 1000,
         },
         currentTime,

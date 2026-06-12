@@ -18,7 +18,6 @@ type Theme = "light" | "dark"
 
 const defaultPayInput: PayInput = {
   monthlySalary: 3000000,
-  monthlyHours: 160,
   alertUnit: 1000,
 }
 
@@ -31,7 +30,6 @@ export function App() {
   const [monthlySalary, setMonthlySalary] = useState(
     formatCurrencyInput(String(defaultPayInput.monthlySalary)),
   )
-  const [monthlyHours, setMonthlyHours] = useState(String(defaultPayInput.monthlyHours))
   const [alertUnit, setAlertUnit] = useState(formatCurrencyInput(String(defaultPayInput.alertUnit)))
   const [activeInput, setActiveInput] = useState<PayInput>(defaultPayInput)
   const [currentTime, setCurrentTime] = useState(Date.now())
@@ -83,14 +81,9 @@ export function App() {
     requestBrowserNotification(label)
   }, [activeInput.alertUnit, earned, lastMilestoneAmount])
 
-  function applyPayInput(
-    nextMonthlySalary: string,
-    nextMonthlyHours: string,
-    nextAlertUnit: string,
-  ): void {
+  function applyPayInput(nextMonthlySalary: string, nextAlertUnit: string): void {
     const parsed = parsePayInput(
       parseCurrencyInput(nextMonthlySalary),
-      Number(nextMonthlyHours),
       parseCurrencyInput(nextAlertUnit),
     )
 
@@ -113,18 +106,13 @@ export function App() {
   function updateMonthlySalary(value: string): void {
     const nextMonthlySalary = formatCurrencyInput(value)
     setMonthlySalary(nextMonthlySalary)
-    applyPayInput(nextMonthlySalary, monthlyHours, alertUnit)
-  }
-
-  function updateMonthlyHours(value: string): void {
-    setMonthlyHours(value)
-    applyPayInput(monthlySalary, value, alertUnit)
+    applyPayInput(nextMonthlySalary, alertUnit)
   }
 
   function updateAlertUnit(value: string): void {
     const nextAlertUnit = formatCurrencyInput(value)
     setAlertUnit(nextAlertUnit)
-    applyPayInput(monthlySalary, monthlyHours, nextAlertUnit)
+    applyPayInput(monthlySalary, nextAlertUnit)
   }
 
   function toggleTheme(): void {
@@ -199,13 +187,11 @@ export function App() {
         {isSettingsOpen ? (
           <SettingsModal
             monthlySalary={monthlySalary}
-            monthlyHours={monthlyHours}
             alertUnit={alertUnit}
             readableSalary={readableSalary}
             error={error}
             notificationPermission={notificationPermission}
             onMonthlySalaryChange={updateMonthlySalary}
-            onMonthlyHoursChange={updateMonthlyHours}
             onAlertUnitChange={updateAlertUnit}
             onClose={() => setIsSettingsOpen(false)}
             onEnableNotifications={enableNotifications}

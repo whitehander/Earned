@@ -25,11 +25,6 @@ struct MenuBarAmountView: View {
 
     @ViewBuilder
     var body: some View {
-        Text("이번 달 누적")
-            .disabled(true)
-
-        Divider()
-
         Button("설정...") {
             SettingsPanelController.shared.show(ticker: ticker)
         }

@@ -2,13 +2,11 @@ export type NotificationPermissionStatus = NotificationPermission | "unsupported
 
 type NotificationSettingsModalProps = {
   readonly monthlySalary: string
-  readonly monthlyHours: string
   readonly alertUnit: string
   readonly readableSalary: string
   readonly error: string
   readonly notificationPermission: NotificationPermissionStatus
   readonly onMonthlySalaryChange: (value: string) => void
-  readonly onMonthlyHoursChange: (value: string) => void
   readonly onAlertUnitChange: (value: string) => void
   readonly onClose: () => void
   readonly onEnableNotifications: () => Promise<void>
@@ -16,13 +14,11 @@ type NotificationSettingsModalProps = {
 
 export function SettingsModal({
   monthlySalary,
-  monthlyHours,
   alertUnit,
   readableSalary,
   error,
   notificationPermission,
   onMonthlySalaryChange,
-  onMonthlyHoursChange,
   onAlertUnitChange,
   onClose,
   onEnableNotifications,
@@ -63,17 +59,6 @@ export function SettingsModal({
             <fieldset className="unit-hints" aria-label="월급 한글 표기">
               <span>{readableSalary}</span>
             </fieldset>
-
-            <label>
-              월 근무시간
-              <input
-                inputMode="decimal"
-                min="0"
-                type="number"
-                value={monthlyHours}
-                onChange={(event) => onMonthlyHoursChange(event.target.value)}
-              />
-            </label>
           </section>
 
           <section className="settings-section" aria-labelledby="alert-settings-title">

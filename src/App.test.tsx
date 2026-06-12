@@ -90,7 +90,7 @@ describe("App", () => {
     fireEvent.change(screen.getByLabelText("월급 (실수령액)"), { target: { value: "" } })
 
     // Then: 계산은 시작되지 않고 검증 메시지가 표시된다.
-    expect(screen.getByText("월급과 월 근무시간을 0보다 크게 입력하세요.")).toBeVisible()
+    expect(screen.getByText("월급을 0보다 크게 입력하세요.")).toBeVisible()
     expect(screen.queryByText("저장되었습니다.")).not.toBeInTheDocument()
   })
 
@@ -103,12 +103,12 @@ describe("App", () => {
     expect(screen.queryByLabelText("금액 알림 단위")).not.toBeInTheDocument()
     fireEvent.click(screen.getByRole("button", { name: "설정" }))
 
-    // Then: 월급, 근무시간, 알림 단위 입력은 모달 안에서만 보인다.
+    // Then: 월급과 알림 단위 입력은 모달 안에서만 보인다.
     expect(screen.getByRole("dialog", { name: "설정" })).toBeVisible()
     expect(screen.getByRole("heading", { name: "급여 설정" })).toBeVisible()
     expect(screen.getByRole("heading", { name: "알림 설정" })).toBeVisible()
     expect(screen.getByLabelText("월급 (실수령액)")).toHaveValue("3,000,000")
-    expect(screen.getByLabelText("월 근무시간")).toHaveValue(160)
+    expect(screen.queryByLabelText("월 근무시간")).not.toBeInTheDocument()
     expect(screen.getByLabelText("금액 알림 단위")).toHaveValue("1,000")
   })
 
@@ -147,7 +147,6 @@ describe("App", () => {
     fireEvent.change(screen.getByLabelText("월급 (실수령액)"), {
       target: { value: "999999999999" },
     })
-    fireEvent.change(screen.getByLabelText("월 근무시간"), { target: { value: "1" } })
 
     // Then: 길어진 금액 텍스트는 더 작은 크기 규칙을 가진다.
     expect(screen.getByTestId("earned-amount").querySelector("span")).toHaveStyle({
@@ -190,7 +189,6 @@ describe("App", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "설정" }))
     fireEvent.change(screen.getByLabelText("월급 (실수령액)"), { target: { value: "2592000" } })
-    fireEvent.change(screen.getByLabelText("월 근무시간"), { target: { value: "1" } })
     fireEvent.change(screen.getByLabelText("금액 알림 단위"), { target: { value: "1" } })
 
     // When: 1초가 지난다.

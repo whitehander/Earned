@@ -2,7 +2,6 @@ import SwiftUI
 
 struct FloatingAmountWindow: View {
     @ObservedObject var ticker: EarningsTicker
-    @ObservedObject var appState: AppState
     @State private var isHovering = false
 
     var body: some View {
@@ -29,14 +28,14 @@ struct FloatingAmountWindow: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
 
                 Button {
-                    WindowActions.terminate()
+                    WindowActions.hideAmountWindow()
                 } label: {
                     Image(systemName: "xmark.circle.fill")
                         .font(.system(size: 19, weight: .semibold))
                         .symbolRenderingMode(.hierarchical)
                 }
                 .buttonStyle(.plain)
-                .accessibilityLabel("종료")
+                .accessibilityLabel("창 숨기기")
                 .opacity(isHovering ? 1 : 0)
                 .allowsHitTesting(isHovering)
                 .padding(9)
@@ -55,9 +54,6 @@ struct FloatingAmountWindow: View {
         )
         .background(HoverTrackingView(isHovering: $isHovering))
         .background(FloatingWindowConfigurator())
-        .sheet(isPresented: $appState.isSettingsPresented) {
-            SettingsSheet(ticker: ticker)
-        }
         .animation(.easeInOut(duration: 0.22), value: ticker.headlineMessage)
     }
 

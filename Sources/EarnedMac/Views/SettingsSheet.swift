@@ -5,24 +5,20 @@ import EarnedCore
 
 struct SettingsSheet: View {
     @ObservedObject var ticker: EarningsTicker
-    @Environment(\.dismiss) private var dismiss
-    let onClose: () -> Void
+    @AppStorage(DockIconVisibility.hideDockIconKey) private var hidesDockIcon = false
 
     @State private var monthlySalary: String
-    @State private var monthlyHours: String
     @State private var alertUnit: String
     @State private var error = ""
     @State private var notificationAction: MilestoneNotificationSettingsAction = .disabled(
         label: "알림 상태 확인 중"
     )
 
-    init(ticker: EarningsTicker, onClose: @escaping () -> Void = {}) {
+    init(ticker: EarningsTicker) {
         self.ticker = ticker
-        self.onClose = onClose
         _monthlySalary = State(initialValue: PayCalculator.formatCurrencyInput(
             String(Int(ticker.input.monthlySalary))
         ))
-        _monthlyHours = State(initialValue: String(format: "%.0f", ticker.input.monthlyHours))
         _alertUnit = State(initialValue: PayCalculator.formatCurrencyInput(
             String(Int(ticker.input.alertUnit))
         ))
@@ -35,14 +31,6 @@ struct SettingsSheet: View {
                     .font(.title3.weight(.semibold))
 
                 Spacer()
-
-                Button {
-                    close()
-                } label: {
-                    Image(systemName: "xmark.circle.fill")
-                }
-                .buttonStyle(.plain)
-                .accessibilityLabel("설정 닫기")
             }
 
             Form {
@@ -54,11 +42,6 @@ struct SettingsSheet: View {
 
                     Text(readableSalary)
                         .foregroundStyle(.secondary)
-
-                    TextField("월 근무시간", text: $monthlyHours)
-                        .onChange(of: monthlyHours) { _, _ in
-                            applyCurrentInput()
-                        }
                 }
 
                 Section("알림 설정") {
@@ -72,6 +55,13 @@ struct SettingsSheet: View {
                     }
                     .disabled(isNotificationButtonDisabled)
                 }
+
+                Section("앱 설정") {
+                    Toggle("Dock에서 아이콘 안 보기", isOn: $hidesDockIcon)
+                        .onChange(of: hidesDockIcon) { _, value in
+                            DockIconVisibility.apply(hidesDockIcon: value)
+                        }
+                }
             }
 
             if !error.isEmpty {
@@ -79,15 +69,6 @@ struct SettingsSheet: View {
                     .font(.callout)
                     .foregroundStyle(.red)
                     .accessibilityAddTraits(.isStaticText)
-            }
-
-            HStack {
-                Spacer()
-
-                Button("완료") {
-                    close()
-                }
-                .buttonStyle(.borderedProminent)
             }
         }
         .padding(20)
@@ -139,7 +120,6 @@ struct SettingsSheet: View {
     private func applyCurrentInput() {
         let parsed = PayCalculator.parsePayInput(
             monthlySalary: PayCalculator.parseCurrencyInput(monthlySalary),
-            monthlyHours: Double(monthlyHours) ?? Double.nan,
             alertUnit: PayCalculator.parseCurrencyInput(alertUnit)
         )
 
@@ -186,11 +166,6 @@ struct SettingsSheet: View {
             NSWorkspace.shared.open(url)
         }
         refreshNotificationStatus()
-    }
-
-    private func close() {
-        onClose()
-        dismiss()
     }
 
     private static func permissionState(

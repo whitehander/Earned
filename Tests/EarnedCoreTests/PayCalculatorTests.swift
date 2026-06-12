@@ -56,7 +56,6 @@ final class PayCalculatorTests: XCTestCase {
     func testParsesInvalidPayInputWithUserFacingMessage() {
         let result = PayCalculator.parsePayInput(
             monthlySalary: 0,
-            monthlyHours: 160,
             alertUnit: 1_000
         )
 
