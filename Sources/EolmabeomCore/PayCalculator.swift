@@ -18,7 +18,45 @@ public struct PayInput: Equatable, Sendable {
     )
 }
 
+public enum PayInputResult: Equatable, Sendable {
+    case valid(PayInput)
+    case invalid(String)
+}
+
 public enum PayCalculator {
+    public static let invalidInputMessage = "월급과 월 근무시간을 0보다 크게 입력하세요."
+
+    public static func parseCurrencyInput(_ value: String) -> Double {
+        let normalized = value.replacingOccurrences(of: ",", with: "").trimmingCharacters(in: .whitespaces)
+        return normalized.isEmpty ? Double.nan : Double(normalized) ?? Double.nan
+    }
+
+    public static func formatCurrencyInput(_ value: String) -> String {
+        let digits = value.filter(\.isNumber)
+        guard let number = Double(digits), !digits.isEmpty else {
+            return ""
+        }
+
+        return format(number, minimumFractionDigits: 0, maximumFractionDigits: 0)
+    }
+
+    public static func parsePayInput(
+        monthlySalary: Double,
+        monthlyHours: Double,
+        alertUnit: Double
+    ) -> PayInputResult {
+        guard monthlySalary.isFinite, monthlyHours.isFinite, monthlySalary > 0, monthlyHours > 0 else {
+            return .invalid(invalidInputMessage)
+        }
+
+        let normalizedAlertUnit = alertUnit.isFinite && alertUnit > 0 ? alertUnit : 1_000
+        return .valid(PayInput(
+            monthlySalary: monthlySalary,
+            monthlyHours: monthlyHours,
+            alertUnit: normalizedAlertUnit
+        ))
+    }
+
     public static func wonPerSecond(
         input: PayInput,
         currentTime: Date,
@@ -58,6 +96,34 @@ public enum PayCalculator {
 
     public static func formatWholeWon(_ value: Double) -> String {
         "\(format(floor(value), minimumFractionDigits: 0, maximumFractionDigits: 0))원"
+    }
+
+    public static func formatKoreanCurrencyUnit(_ value: Double) -> String {
+        guard value.isFinite, value > 0 else {
+            return ""
+        }
+
+        if value >= 100_000_000, value.truncatingRemainder(dividingBy: 100_000_000) == 0 {
+            return "\(Int(value / 100_000_000))억원"
+        }
+
+        if value >= 10_000_000, value.truncatingRemainder(dividingBy: 10_000_000) == 0 {
+            return "\(Int(value / 10_000_000))천만원"
+        }
+
+        if value >= 1_000_000, value.truncatingRemainder(dividingBy: 1_000_000) == 0 {
+            return "\(Int(value / 1_000_000))백만원"
+        }
+
+        if value >= 10_000, value.truncatingRemainder(dividingBy: 10_000) == 0 {
+            return "\(Int(value / 10_000))만원"
+        }
+
+        if value >= 1_000, value.truncatingRemainder(dividingBy: 1_000) == 0 {
+            return "\(Int(value / 1_000))천원"
+        }
+
+        return formatWholeWon(value)
     }
 
     private static func daysInMonth(for currentTime: Date, calendar: Calendar) -> Int {

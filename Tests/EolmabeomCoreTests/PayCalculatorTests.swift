@@ -47,6 +47,22 @@ final class PayCalculatorTests: XCTestCase {
         XCTAssertEqual(PayCalculator.formatWholeWon(2_000_000.78), "2,000,000원")
     }
 
+    func testFormatsKoreanReadableCurrencyUnits() {
+        XCTAssertEqual(PayCalculator.formatKoreanCurrencyUnit(1_000), "1천원")
+        XCTAssertEqual(PayCalculator.formatKoreanCurrencyUnit(100_000), "10만원")
+        XCTAssertEqual(PayCalculator.formatKoreanCurrencyUnit(5_000_000), "5백만원")
+    }
+
+    func testParsesInvalidPayInputWithUserFacingMessage() {
+        let result = PayCalculator.parsePayInput(
+            monthlySalary: 0,
+            monthlyHours: 160,
+            alertUnit: 1_000
+        )
+
+        XCTAssertEqual(result, .invalid(PayCalculator.invalidInputMessage))
+    }
+
     private func date(
         year: Int,
         month: Int,

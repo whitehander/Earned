@@ -20,7 +20,8 @@ struct FloatingWindowConfigurator: NSViewRepresentable {
 
             window.level = .floating
             window.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
-            window.styleMask = [.borderless]
+            window.styleMask = [.borderless, .resizable]
+            window.minSize = NSSize(width: 240, height: 96)
             window.isMovableByWindowBackground = true
             window.isOpaque = false
             window.backgroundColor = .clear

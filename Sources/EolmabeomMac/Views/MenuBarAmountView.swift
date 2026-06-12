@@ -1,30 +1,26 @@
 import SwiftUI
 
 struct MenuBarAmountView: View {
-    @ObservedObject var ticker: EarningsTicker
+    let ticker: EarningsTicker
 
+    @ViewBuilder
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text(ticker.amountLabel)
-                .font(.headline)
-                .monospacedDigit()
-                .contentTransition(.numericText())
+        Text("이번 달 누적")
+            .disabled(true)
 
-            Text("이번 달 누적")
-                .font(.caption)
-                .foregroundStyle(.secondary)
+        Divider()
 
-            Divider()
-
-            Button("창 앞으로 가져오기") {
-                WindowActions.bringAmountWindowToFront()
-            }
-
-            Button("종료") {
-                WindowActions.terminate()
-            }
-            .keyboardShortcut("q")
+        Button("설정...") {
+            SettingsPanelController.shared.show(ticker: ticker)
         }
-        .padding(.vertical, 4)
+
+        Button("창 앞으로 가져오기") {
+            WindowActions.bringAmountWindowToFront()
+        }
+
+        Button("종료") {
+            WindowActions.terminate()
+        }
+        .keyboardShortcut("q")
     }
 }
