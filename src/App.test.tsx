@@ -29,7 +29,7 @@ describe("App", () => {
 
     // Then: 월 1일부터 오늘까지의 수익만 사용자에게 크게 보인다.
     expect(screen.getByDisplayValue("6,000,000")).toBeVisible()
-    expect(screen.getByRole("heading", { name: "얼마범" })).toBeVisible()
+    expect(screen.getByRole("heading", { name: "지금까지 번 돈" })).toBeVisible()
     expect(screen.getByTestId("earned-amount")).toHaveClass("amount-value")
     expect(screen.getByTestId("earned-amount")).toHaveTextContent("2,000,000.00원")
     expect(screen.queryByRole("button", { name: "초당 1.16원" })).not.toBeInTheDocument()
@@ -57,6 +57,24 @@ describe("App", () => {
 
     // Then: 표시 금액이 갱신된다.
     expect(screen.getByTestId("earned-amount")).toHaveTextContent("1,000,000.14원")
+  })
+
+  it("rotates the earned money headline every 3 seconds", () => {
+    render(<App />)
+
+    expect(screen.getByTestId("earned-headline")).toHaveTextContent("지금까지 번 돈")
+
+    act(() => {
+      vi.advanceTimersByTime(3000)
+    })
+
+    expect(screen.getByTestId("earned-headline")).toHaveTextContent("1일부터 지금까지")
+
+    act(() => {
+      vi.advanceTimersByTime(3000)
+    })
+
+    expect(screen.getByTestId("earned-headline")).toHaveTextContent("여태까지 번 돈")
   })
 
   it("blocks invalid pay inputs", async () => {

@@ -1,17 +1,29 @@
 import SwiftUI
+import EarnedCore
 
 struct FloatingAmountWindow: View {
     @ObservedObject var ticker: EarningsTicker
     @ObservedObject var appState: AppState
     @State private var isHovering = false
+    @State private var headlineIndex = 0
+    private let headlineTimer = Timer.publish(
+        every: EarnedHeadline.rotationIntervalSeconds,
+        on: .main,
+        in: .common
+    ).autoconnect()
 
     var body: some View {
         GeometryReader { geometry in
             ZStack(alignment: .topTrailing) {
                 VStack(spacing: 6) {
-                    Text("얼마범")
+                    Text(EarnedHeadline.message(at: headlineIndex))
                         .font(.caption)
                         .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.62)
+                        .frame(maxWidth: .infinity)
+                        .id(headlineIndex)
+                        .transition(.opacity)
 
                     AnimatedAmountText(
                         label: ticker.amountLabel,
@@ -53,6 +65,10 @@ struct FloatingAmountWindow: View {
         .sheet(isPresented: $appState.isSettingsPresented) {
             SettingsSheet(ticker: ticker)
         }
+        .onReceive(headlineTimer) { _ in
+            headlineIndex = (headlineIndex + 1) % EarnedHeadline.messages.count
+        }
+        .animation(.easeInOut(duration: 0.22), value: headlineIndex)
     }
 
     private func amountFontSize(for size: CGSize) -> CGFloat {

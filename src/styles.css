@@ -119,6 +119,14 @@ h1 {
   line-height: 0.95;
 }
 
+.earned-headline {
+  max-width: min(720px, calc(100vw - 152px));
+  min-height: 1em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 h2 {
   font-size: 16px;
   line-height: 1.2;

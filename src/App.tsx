@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react"
+import { earnedHeadlineIntervalMs, earnedHeadlines, getEarnedHeadline } from "./domain/headlines"
 import {
   calculateMonthElapsedSeconds,
   calculateWonPerSecond,
@@ -36,6 +37,7 @@ export function App() {
   const [lastMilestoneAmount, setLastMilestoneAmount] = useState(0)
   const [theme, setTheme] = useState<Theme>(readStoredTheme)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+  const [headlineIndex, setHeadlineIndex] = useState(0)
   const [notificationPermission, setNotificationPermission] =
     useState<NotificationPermissionStatus>(readNotificationPermission)
 
@@ -46,12 +48,23 @@ export function App() {
   const elapsedSeconds = calculateMonthElapsedSeconds(currentTime)
   const earned = elapsedSeconds * wonPerSecond
   const earnedLabel = formatWon(earned)
+  const earnedHeadline = getEarnedHeadline(headlineIndex)
   const readableSalary = formatKoreanCurrencyUnit(parseCurrencyInput(monthlySalary))
 
   useEffect(() => {
     const intervalId = window.setInterval(() => {
       setCurrentTime(Date.now())
     }, 125)
+
+    return () => {
+      window.clearInterval(intervalId)
+    }
+  }, [])
+
+  useEffect(() => {
+    const intervalId = window.setInterval(() => {
+      setHeadlineIndex((currentIndex) => (currentIndex + 1) % earnedHeadlines.length)
+    }, earnedHeadlineIntervalMs)
 
     return () => {
       window.clearInterval(intervalId)
@@ -154,7 +167,9 @@ export function App() {
       <section className="hero-panel" aria-labelledby="app-title">
         <header className="top-bar">
           <div>
-            <h1 id="app-title">얼마범</h1>
+            <h1 id="app-title" className="earned-headline" data-testid="earned-headline">
+              {earnedHeadline}
+            </h1>
           </div>
           <div className="top-actions">
             <button
