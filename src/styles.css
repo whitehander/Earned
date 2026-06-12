@@ -153,8 +153,8 @@ h2 {
 }
 
 .download-link {
+  display: none;
   min-height: 44px;
-  display: inline-flex;
   align-items: center;
   justify-content: center;
   border: 1px solid var(--control-border);
@@ -214,9 +214,11 @@ h2 {
 }
 
 .amount-value {
+  display: inline-block;
   font-size: max(86px, min(18vh, 11vw));
   line-height: 0.9;
   letter-spacing: 0;
+  white-space: nowrap;
 }
 
 label {
@@ -225,6 +227,12 @@ label {
   color: var(--text-mid);
   font-size: 14px;
   font-weight: 800;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .download-link {
+    display: inline-flex;
+  }
 }
 
 input {

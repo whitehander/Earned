@@ -28,6 +28,7 @@ const macDownloadUrl =
 const githubUrl = "https://github.com/whitehander/Earned"
 
 export function App() {
+  const showMacDownload = isMacDesktopPlatform()
   const [monthlySalary, setMonthlySalary] = useState(
     formatCurrencyInput(String(defaultPayInput.monthlySalary)),
   )
@@ -153,9 +154,11 @@ export function App() {
             </h1>
           </div>
           <div className="top-actions">
-            <a className="download-link" href={macDownloadUrl}>
-              Mac 다운로드
-            </a>
+            {showMacDownload ? (
+              <a className="download-link" href={macDownloadUrl}>
+                Mac 다운로드
+              </a>
+            ) : null}
             <a
               className="icon-button icon-link"
               href={githubUrl}
@@ -227,6 +230,13 @@ function readStoredTheme(): Theme {
 
 function readNotificationPermission(): NotificationPermissionStatus {
   return "Notification" in window ? Notification.permission : "unsupported"
+}
+
+function isMacDesktopPlatform(): boolean {
+  const platform = navigator.platform.toLowerCase()
+  const userAgent = navigator.userAgent.toLowerCase()
+
+  return platform.includes("mac") && !/iphone|ipad|ipod|android|mobile/.test(userAgent)
 }
 
 function getAmountFontSize(amountLabel: string): string {

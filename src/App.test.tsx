@@ -6,6 +6,11 @@ describe("App", () => {
   beforeEach(() => {
     window.localStorage.clear()
     document.documentElement.removeAttribute("data-theme")
+    Object.defineProperty(window.navigator, "platform", { value: "MacIntel", configurable: true })
+    Object.defineProperty(window.navigator, "userAgent", {
+      value: "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_0)",
+      configurable: true,
+    })
     vi.useFakeTimers()
     vi.setSystemTime(new Date("2026-06-11T00:00:00.000Z"))
   })
@@ -51,6 +56,22 @@ describe("App", () => {
     expect(screen.queryByText("소액 수익화를 위한 배너 슬롯")).not.toBeInTheDocument()
     expect(screen.queryByRole("button", { name: "근무 시작" })).not.toBeInTheDocument()
     expect(screen.queryByRole("button", { name: "정지" })).not.toBeInTheDocument()
+  })
+
+  it("hides the Mac download link on mobile browsers", () => {
+    // Given: 모바일 브라우저에서 앱을 연다.
+    Object.defineProperty(window.navigator, "platform", { value: "iPhone", configurable: true })
+    Object.defineProperty(window.navigator, "userAgent", {
+      value: "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) Mobile",
+      configurable: true,
+    })
+
+    // When: 앱을 렌더링한다.
+    render(<App />)
+
+    // Then: Mac 다운로드는 숨기고 저장소 바로가기는 유지한다.
+    expect(screen.queryByRole("link", { name: "Mac 다운로드" })).not.toBeInTheDocument()
+    expect(screen.getByRole("link", { name: "GitHub 저장소" })).toBeVisible()
   })
 
   it("refreshes displayed earnings every 125 milliseconds", () => {
