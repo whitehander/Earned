@@ -4,36 +4,60 @@ import EolmabeomCore
 struct AnimatedAmountText: View {
     let label: String
     let fontSize: CGFloat
+    let presentation: AmountTextPresentation
+    let referenceDate: Date?
+
+    init(
+        label: String,
+        fontSize: CGFloat,
+        presentation: AmountTextPresentation = .window,
+        referenceDate: Date? = nil
+    ) {
+        self.label = label
+        self.fontSize = fontSize
+        self.presentation = presentation
+        self.referenceDate = referenceDate
+    }
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     private let highlightProfile = AmountHighlightProfile.defaultValue
 
     var body: some View {
-        TimelineView(.animation) { timeline in
-            let state = animationState(at: timeline.date)
-            let progress = reduceMotion ? 0.5 : state.gradientProgress
-
-            ZStack {
-                amountText
-                    .foregroundStyle(glowGradient(progress: progress))
-                    .blur(radius: reduceMotion ? 8 : state.glowBlur)
-                    .opacity(reduceMotion ? 0.36 : state.glowOpacity)
-                    .scaleEffect(reduceMotion ? 1.02 : state.glowScale)
-                    .blendMode(.screen)
-
-                amountText
-                    .foregroundStyle(textGradient(progress: progress))
-                    .shadow(
-                        color: amountHighlight.opacity(reduceMotion ? 0.16 : state.shadowOpacity),
-                        radius: reduceMotion ? 18 : state.shadowRadius,
-                        x: 0,
-                        y: reduceMotion ? 12 : state.shadowY
-                    )
+        if let referenceDate {
+            animatedText(at: referenceDate)
+        } else {
+            TimelineView(.periodic(from: .now, by: presentation.timelineInterval)) { timeline in
+                animatedText(at: timeline.date)
             }
-            .compositingGroup()
-            .scaleEffect(reduceMotion ? 1 : state.scale)
-            .offset(y: reduceMotion ? 0 : state.yOffset)
         }
+    }
+
+    private func animatedText(at date: Date) -> some View {
+        let state = animationState(at: date)
+        let progress = reduceMotion ? 0.5 : state.gradientProgress
+
+        return ZStack {
+            amountText
+                .foregroundStyle(glowGradient(progress: progress))
+                .blur(radius: presentation.glowBlur(reduceMotion ? 8 : state.glowBlur))
+                .opacity(presentation.glowOpacity(reduceMotion ? 0.36 : state.glowOpacity))
+                .scaleEffect(presentation.scale(reduceMotion ? 1.02 : state.glowScale))
+                .blendMode(.screen)
+
+            amountText
+                .foregroundStyle(textGradient(progress: progress))
+                .shadow(
+                    color: amountHighlight.opacity(
+                        presentation.shadowOpacity(reduceMotion ? 0.16 : state.shadowOpacity)
+                    ),
+                    radius: presentation.shadowRadius(reduceMotion ? 18 : state.shadowRadius),
+                    x: 0,
+                    y: presentation.shadowY(reduceMotion ? 12 : state.shadowY)
+                )
+        }
+        .compositingGroup()
+        .scaleEffect(reduceMotion ? 1 : presentation.scale(state.scale))
+        .offset(y: reduceMotion ? 0 : presentation.yOffset(state.yOffset))
     }
 
     private var amountText: some View {
@@ -191,4 +215,81 @@ private struct AmountPulseState {
     let glowBlur: Double
     let glowScale: Double
     let glowOpacity: Double
+}
+
+enum AmountTextPresentation {
+    case window
+    case menuBar
+
+    var timelineInterval: TimeInterval {
+        switch self {
+        case .window:
+            1.0 / 12.0
+        case .menuBar:
+            1.0 / 12.0
+        }
+    }
+
+    func glowBlur(_ value: Double) -> Double {
+        switch self {
+        case .window:
+            value
+        case .menuBar:
+            value * 0.22
+        }
+    }
+
+    func glowOpacity(_ value: Double) -> Double {
+        switch self {
+        case .window:
+            value
+        case .menuBar:
+            min(0.44, value * 0.74)
+        }
+    }
+
+    func shadowRadius(_ value: Double) -> Double {
+        switch self {
+        case .window:
+            value
+        case .menuBar:
+            value * 0.18
+        }
+    }
+
+    func shadowOpacity(_ value: Double) -> Double {
+        switch self {
+        case .window:
+            value
+        case .menuBar:
+            value * 0.5
+        }
+    }
+
+    func shadowY(_ value: Double) -> Double {
+        switch self {
+        case .window:
+            value
+        case .menuBar:
+            value * 0.12
+        }
+    }
+
+    func yOffset(_ value: Double) -> Double {
+        switch self {
+        case .window:
+            value
+        case .menuBar:
+            value * 0.12
+        }
+    }
+
+    func scale(_ value: Double) -> Double {
+        switch self {
+        case .window:
+            value
+        case .menuBar:
+            1 + ((value - 1) * 0.28)
+        }
+    }
 }

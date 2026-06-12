@@ -1,3 +1,4 @@
+import AppKit
 import SwiftUI
 import UserNotifications
 import EolmabeomCore
@@ -11,8 +12,9 @@ struct SettingsSheet: View {
     @State private var monthlyHours: String
     @State private var alertUnit: String
     @State private var error = ""
-    @State private var notificationLabel = "알림 상태 확인 중"
-    @State private var notificationDisabled = true
+    @State private var notificationAction: MilestoneNotificationSettingsAction = .disabled(
+        label: "알림 상태 확인 중"
+    )
 
     init(ticker: EarningsTicker, onClose: @escaping () -> Void = {}) {
         self.ticker = ticker
@@ -65,10 +67,10 @@ struct SettingsSheet: View {
                             updateAlertUnit(value)
                         }
 
-                    Button(notificationLabel) {
-                        requestNotificationPermission()
+                    Button(notificationButtonLabel) {
+                        performNotificationAction()
                     }
-                    .disabled(notificationDisabled)
+                    .disabled(isNotificationButtonDisabled)
                 }
             }
 
@@ -95,6 +97,23 @@ struct SettingsSheet: View {
 
     private var readableSalary: String {
         PayCalculator.formatKoreanCurrencyUnit(PayCalculator.parseCurrencyInput(monthlySalary))
+    }
+
+    private var notificationButtonLabel: String {
+        switch notificationAction {
+        case .disabled(let label),
+             .requestPermission(let label),
+             .openSystemSettings(let label):
+            label
+        }
+    }
+
+    private var isNotificationButtonDisabled: Bool {
+        if case .disabled = notificationAction {
+            return true
+        }
+
+        return false
     }
 
     private func updateMonthlySalary(_ value: String) {
@@ -136,21 +155,21 @@ struct SettingsSheet: View {
     private func refreshNotificationStatus() {
         UNUserNotificationCenter.current().getNotificationSettings { settings in
             Task { @MainActor in
-                switch settings.authorizationStatus {
-                case .authorized, .provisional, .ephemeral:
-                    notificationLabel = "알림 켜져있음"
-                    notificationDisabled = true
-                case .denied:
-                    notificationLabel = "알림 권한 거부됨"
-                    notificationDisabled = true
-                case .notDetermined:
-                    notificationLabel = "알림 켜기"
-                    notificationDisabled = false
-                @unknown default:
-                    notificationLabel = "알림 상태 알 수 없음"
-                    notificationDisabled = true
-                }
+                let state = Self.permissionState(from: settings.authorizationStatus)
+                notificationAction = MilestoneNotificationPermissionPolicy.settingsAction(for: state)
+                ticker.updateNotificationPermissionState(state)
             }
+        }
+    }
+
+    private func performNotificationAction() {
+        switch notificationAction {
+        case .disabled:
+            break
+        case .requestPermission:
+            requestNotificationPermission()
+        case .openSystemSettings:
+            openNotificationSettings()
         }
     }
 
@@ -160,8 +179,32 @@ struct SettingsSheet: View {
         }
     }
 
+    private func openNotificationSettings() {
+        let bundleIdentifier = Bundle.main.bundleIdentifier ?? "com.whitehander.eolmabeom.mac"
+        let urlString = "x-apple.systempreferences:com.apple.Notifications-Settings.extension?\(bundleIdentifier)"
+        if let url = URL(string: urlString) {
+            NSWorkspace.shared.open(url)
+        }
+        refreshNotificationStatus()
+    }
+
     private func close() {
         onClose()
         dismiss()
+    }
+
+    private static func permissionState(
+        from authorizationStatus: UNAuthorizationStatus
+    ) -> MilestoneNotificationPermissionState {
+        switch authorizationStatus {
+        case .authorized, .provisional, .ephemeral:
+            .authorized
+        case .notDetermined:
+            .notDetermined
+        case .denied:
+            .denied
+        @unknown default:
+            .denied
+        }
     }
 }

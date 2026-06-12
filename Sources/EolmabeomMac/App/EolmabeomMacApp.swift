@@ -26,8 +26,10 @@ struct EolmabeomMacApp: App {
         MenuBarExtra {
             MenuBarAmountView(ticker: ticker)
         } label: {
-            Text(ticker.menuBarTitle)
-                .monospacedDigit()
+            MenuBarAmountLabel(
+                label: ticker.menuBarTitle,
+                date: ticker.currentTime
+            )
         }
         .menuBarExtraStyle(.menu)
     }

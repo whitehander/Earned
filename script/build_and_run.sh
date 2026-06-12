@@ -3,7 +3,7 @@ set -euo pipefail
 
 MODE="${1:-run}"
 APP_NAME="EolmabeomMac"
-BUNDLE_ID="com.whitehander.eolmabeom.mac"
+BUNDLE_ID="${BUNDLE_ID:-com.whitehander.eolmabeom.mac}"
 MIN_SYSTEM_VERSION="14.0"
 export DEVELOPER_DIR="${DEVELOPER_DIR:-/Applications/Xcode.app/Contents/Developer}"
 
@@ -41,8 +41,16 @@ cat >"$INFO_PLIST" <<PLIST
   <string>AppIcon</string>
   <key>CFBundleName</key>
   <string>오늘까지 얼마범?</string>
+  <key>CFBundleDisplayName</key>
+  <string>오늘까지 얼마범?</string>
+  <key>CFBundleShortVersionString</key>
+  <string>1.0</string>
+  <key>CFBundleVersion</key>
+  <string>1</string>
   <key>CFBundlePackageType</key>
   <string>APPL</string>
+  <key>NSUserNotificationUsageDescription</key>
+  <string>금액 알림을 표시하기 위해 알림 권한을 사용합니다.</string>
   <key>LSMinimumSystemVersion</key>
   <string>$MIN_SYSTEM_VERSION</string>
   <key>NSPrincipalClass</key>
@@ -50,6 +58,10 @@ cat >"$INFO_PLIST" <<PLIST
 </dict>
 </plist>
 PLIST
+
+/usr/bin/codesign --force --deep --sign - "$APP_BUNDLE"
+/usr/bin/codesign --verify --deep --strict "$APP_BUNDLE"
+/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -f "$APP_BUNDLE"
 
 open_app() {
   /usr/bin/open -n "$APP_BUNDLE"
