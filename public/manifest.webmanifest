@@ -1,7 +1,7 @@
 {
   "name": "얼마범",
   "short_name": "얼마범",
-  "description": "월급과 근무시간으로 초당 수익을 실시간 계산합니다.",
+  "description": "월급으로 이번 달 누적 수익을 실시간 계산합니다.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
@@ -9,9 +9,9 @@
   "theme_color": "#101410",
   "icons": [
     {
-      "src": "/icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
+      "src": "/icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
       "purpose": "any maskable"
     }
   ]
