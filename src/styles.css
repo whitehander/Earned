@@ -88,6 +88,7 @@ button {
 }
 
 .hero-panel {
+  width: 100%;
   min-height: calc(100vh - 56px);
   padding: clamp(16px, 3vw, 40px) 0;
   display: grid;
@@ -105,7 +106,11 @@ button {
 }
 
 .top-bar {
-  position: relative;
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  justify-items: center;
   text-align: center;
 }
 
@@ -133,7 +138,7 @@ h1 {
 }
 
 .earned-headline {
-  max-width: min(720px, max(240px, calc(100vw - 376px)));
+  max-width: min(720px, 100%);
   min-height: 1em;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -146,23 +151,22 @@ h2 {
 }
 
 .top-actions {
-  position: absolute;
-  top: 0;
-  right: 0;
+  justify-self: end;
   flex-shrink: 0;
+  gap: 8px;
 }
 
 .download-link {
   display: none;
-  min-height: 44px;
+  min-height: 36px;
   align-items: center;
   justify-content: center;
   border: 1px solid var(--control-border);
   border-radius: 999px;
-  padding: 0 15px;
+  padding: 0 12px;
   background: var(--icon-bg);
   color: var(--icon-text);
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 900;
   text-decoration: none;
   transition:
@@ -182,8 +186,8 @@ h2 {
 }
 
 .icon-button {
-  width: 44px;
-  height: 44px;
+  width: 36px;
+  height: 36px;
   border: 1px solid var(--control-border);
   border-radius: 999px;
   background: var(--icon-bg);
@@ -198,6 +202,11 @@ h2 {
 .icon-button:hover {
   box-shadow: 0 8px 18px rgba(0, 111, 238, 0.22);
   transform: translateY(-1px);
+}
+
+.icon-link svg {
+  width: 18px;
+  height: 18px;
 }
 
 .earnings-display {
@@ -320,9 +329,7 @@ input:focus {
   }
 
   .top-bar {
-    min-height: 44px;
-    display: grid;
-    gap: 16px;
+    gap: 12px;
     align-items: flex-start;
     justify-items: center;
   }
@@ -332,9 +339,8 @@ input:focus {
   }
 
   .top-actions {
-    position: static;
-    flex-wrap: wrap;
-    justify-content: center;
+    flex-wrap: nowrap;
+    justify-content: flex-end;
   }
 
   .earnings-display {

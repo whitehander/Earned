@@ -148,11 +148,6 @@ export function App() {
     <main className="app-shell">
       <section className="hero-panel" aria-labelledby="app-title">
         <header className="top-bar">
-          <div>
-            <h1 id="app-title" className="earned-headline" data-testid="earned-headline">
-              {earnedHeadline}
-            </h1>
-          </div>
           <div className="top-actions">
             {showMacDownload ? (
               <a className="download-link" href={macDownloadUrl}>
@@ -193,6 +188,11 @@ export function App() {
             >
               <span aria-hidden="true">⚙</span>
             </button>
+          </div>
+          <div>
+            <h1 id="app-title" className="earned-headline" data-testid="earned-headline">
+              {earnedHeadline}
+            </h1>
           </div>
         </header>
 
