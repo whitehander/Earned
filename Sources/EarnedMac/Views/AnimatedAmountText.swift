@@ -1,5 +1,5 @@
 import SwiftUI
-import EolmabeomCore
+import EarnedCore
 
 struct AnimatedAmountText: View {
     let label: String

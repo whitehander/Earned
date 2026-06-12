@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="얼마범 아이콘">
+  <rect width="512" height="512" rx="96" fill="#101410" />
+  <circle cx="256" cy="256" r="168" fill="#159447" />
+  <path
+    d="M174 188h164v52H226v36h92v52h-92v60h-52V188Z"
+    fill="#fff"
+  />
+  <path d="M322 128h42v42h-42zM374 128h42v42h-42z" fill="#d8911f" />
+</svg>

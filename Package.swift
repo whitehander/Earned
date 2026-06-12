@@ -3,22 +3,22 @@
 import PackageDescription
 
 let package = Package(
-    name: "Eolmabeom",
+    name: "Earned",
     platforms: [
         .macOS(.v14)
     ],
     products: [
-        .executable(name: "EolmabeomMac", targets: ["EolmabeomMac"])
+        .executable(name: "Earned", targets: ["EarnedMac"])
     ],
     targets: [
-        .target(name: "EolmabeomCore"),
+        .target(name: "EarnedCore"),
         .executableTarget(
-            name: "EolmabeomMac",
-            dependencies: ["EolmabeomCore"]
+            name: "EarnedMac",
+            dependencies: ["EarnedCore"]
         ),
         .testTarget(
-            name: "EolmabeomCoreTests",
-            dependencies: ["EolmabeomCore"]
+            name: "EarnedCoreTests",
+            dependencies: ["EarnedCore"]
         ),
     ]
 )

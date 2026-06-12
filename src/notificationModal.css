@@ -1,0 +1,80 @@
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(16, 19, 24, 0.42);
+}
+
+.notification-modal {
+  display: grid;
+  gap: 18px;
+  width: min(520px, 100%);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  padding: 22px;
+  background: var(--panel-bg);
+  box-shadow: 0 28px 80px var(--panel-shadow);
+}
+
+.settings-form {
+  display: grid;
+  gap: 18px;
+}
+
+.settings-section {
+  display: grid;
+  gap: 12px;
+}
+
+.settings-section + .settings-section {
+  border-top: 1px solid var(--panel-border);
+  padding-top: 18px;
+}
+
+.settings-section h3 {
+  margin: 0;
+  color: var(--text-strong);
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.modal-header,
+.modal-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.modal-close-button {
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--panel-border);
+  border-radius: 999px;
+  background: var(--control-bg);
+  color: var(--text-strong);
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.modal-actions {
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.notification-modal button:disabled {
+  cursor: default;
+  opacity: 0.72;
+  transform: none;
+}
+
+@media (max-width: 480px) {
+  .modal-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+}

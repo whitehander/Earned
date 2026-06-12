@@ -1,5 +1,5 @@
 import XCTest
-@testable import EolmabeomCore
+@testable import EarnedCore
 
 final class AmountHighlightProfileTests: XCTestCase {
     func testHighlightProfileUsesSofterBlueWithBroaderTextGradient() {

@@ -1,5 +1,5 @@
 import XCTest
-@testable import EolmabeomCore
+@testable import EarnedCore
 
 final class MilestoneNotificationPermissionPolicyTests: XCTestCase {
     func testSendsImmediatelyWhenNotificationsAreAuthorized() {

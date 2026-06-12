@@ -1,6 +1,6 @@
 import XCTest
 import Foundation
-@testable import EolmabeomCore
+@testable import EarnedCore
 
 final class PayCalculatorTests: XCTestCase {
     func testWonPerSecondSpreadsMonthlySalaryAcrossEveryCalendarSecond() {

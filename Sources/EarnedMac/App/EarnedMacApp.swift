@@ -1,14 +1,14 @@
 import SwiftUI
-import EolmabeomCore
+import EarnedCore
 
 @main
-struct EolmabeomMacApp: App {
+struct EarnedMacApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     @StateObject private var ticker = EarningsTicker(input: PaySettingsStore.load())
     @StateObject private var appState = AppState.shared
 
     var body: some Scene {
-        WindowGroup("오늘까지 얼마범?") {
+        WindowGroup("얼마범") {
             FloatingAmountWindow(
                 ticker: ticker,
                 appState: appState

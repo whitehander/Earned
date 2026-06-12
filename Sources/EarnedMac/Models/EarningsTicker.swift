@@ -2,10 +2,10 @@ import Foundation
 import Combine
 import OSLog
 @preconcurrency import UserNotifications
-import EolmabeomCore
+import EarnedCore
 
 private let notificationLogger = Logger(
-    subsystem: "com.whitehander.eolmabeom.mac",
+    subsystem: "com.whitehander.earned.mac",
     category: "notifications"
 )
 
@@ -98,7 +98,7 @@ final class EarningsTicker: ObservableObject {
             return
         }
 
-        let identifier = "eolmabeom-\(Int(reachedAmount))"
+        let identifier = "earned-\(Int(reachedAmount))"
         let body = MilestoneNotificationMessage.create(
             amountLabel: PayCalculator.formatWholeWon(reachedAmount)
         )
@@ -200,7 +200,7 @@ final class EarningsTicker: ObservableObject {
             "Adding milestone notification \(identifier, privacy: .public) body: \(body, privacy: .public)"
         )
         let content = UNMutableNotificationContent()
-        content.title = "얼마범?"
+        content.title = "얼마범"
         content.body = body
         content.sound = .default
         let request = UNNotificationRequest(

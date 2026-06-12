@@ -9,7 +9,7 @@ struct FloatingAmountWindow: View {
         GeometryReader { geometry in
             ZStack(alignment: .topTrailing) {
                 VStack(spacing: 6) {
-                    Text("오늘까지 얼마범?")
+                    Text("얼마범")
                         .font(.caption)
                         .foregroundStyle(.secondary)
 

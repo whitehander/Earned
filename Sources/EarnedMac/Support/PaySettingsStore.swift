@@ -1,10 +1,10 @@
 import Foundation
-import EolmabeomCore
+import EarnedCore
 
 enum PaySettingsStore {
-    private static let monthlySalaryKey = "eolmabeom.monthlySalary"
-    private static let monthlyHoursKey = "eolmabeom.monthlyHours"
-    private static let alertUnitKey = "eolmabeom.alertUnit"
+    private static let monthlySalaryKey = "earned.monthlySalary"
+    private static let monthlyHoursKey = "earned.monthlyHours"
+    private static let alertUnitKey = "earned.alertUnit"
 
     static func load() -> PayInput {
         let defaults = UserDefaults.standard

@@ -2,8 +2,8 @@
 set -euo pipefail
 
 MODE="${1:-run}"
-APP_NAME="EolmabeomMac"
-BUNDLE_ID="${BUNDLE_ID:-com.whitehander.eolmabeom.mac}"
+APP_NAME="Earned"
+BUNDLE_ID="${BUNDLE_ID:-com.whitehander.earned.mac}"
 MIN_SYSTEM_VERSION="14.0"
 export DEVELOPER_DIR="${DEVELOPER_DIR:-/Applications/Xcode.app/Contents/Developer}"
 
@@ -40,9 +40,9 @@ cat >"$INFO_PLIST" <<PLIST
   <key>CFBundleIconFile</key>
   <string>AppIcon</string>
   <key>CFBundleName</key>
-  <string>오늘까지 얼마범?</string>
+  <string>Earned</string>
   <key>CFBundleDisplayName</key>
-  <string>오늘까지 얼마범?</string>
+  <string>얼마범</string>
   <key>CFBundleShortVersionString</key>
   <string>1.0</string>
   <key>CFBundleVersion</key>

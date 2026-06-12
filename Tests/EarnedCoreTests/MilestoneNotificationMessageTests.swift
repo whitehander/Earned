@@ -1,5 +1,5 @@
 import XCTest
-@testable import EolmabeomCore
+@testable import EarnedCore
 
 final class MilestoneNotificationMessageTests: XCTestCase {
     func testCreatesMilestoneMessageWithFirstWebEncouragement() {

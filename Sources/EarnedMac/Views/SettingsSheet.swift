@@ -1,7 +1,7 @@
 import AppKit
 import SwiftUI
 import UserNotifications
-import EolmabeomCore
+import EarnedCore
 
 struct SettingsSheet: View {
     @ObservedObject var ticker: EarningsTicker
@@ -180,7 +180,7 @@ struct SettingsSheet: View {
     }
 
     private func openNotificationSettings() {
-        let bundleIdentifier = Bundle.main.bundleIdentifier ?? "com.whitehander.eolmabeom.mac"
+        let bundleIdentifier = Bundle.main.bundleIdentifier ?? "com.whitehander.earned.mac"
         let urlString = "x-apple.systempreferences:com.apple.Notifications-Settings.extension?\(bundleIdentifier)"
         if let url = URL(string: urlString) {
             NSWorkspace.shared.open(url)
