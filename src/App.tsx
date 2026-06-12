@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react"
-import { earnedHeadlineIntervalMs, earnedHeadlines, getEarnedHeadline } from "./domain/headlines"
+import { getEarnedHeadlineAt } from "./domain/headlines"
 import {
   calculateMonthElapsedSeconds,
   calculateWonPerSecond,
@@ -37,7 +37,7 @@ export function App() {
   const [lastMilestoneAmount, setLastMilestoneAmount] = useState(0)
   const [theme, setTheme] = useState<Theme>(readStoredTheme)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
-  const [headlineIndex, setHeadlineIndex] = useState(0)
+  const [headlineStartTime] = useState(() => Date.now())
   const [notificationPermission, setNotificationPermission] =
     useState<NotificationPermissionStatus>(readNotificationPermission)
 
@@ -48,23 +48,13 @@ export function App() {
   const elapsedSeconds = calculateMonthElapsedSeconds(currentTime)
   const earned = elapsedSeconds * wonPerSecond
   const earnedLabel = formatWon(earned)
-  const earnedHeadline = getEarnedHeadline(headlineIndex)
+  const earnedHeadline = getEarnedHeadlineAt(currentTime, headlineStartTime)
   const readableSalary = formatKoreanCurrencyUnit(parseCurrencyInput(monthlySalary))
 
   useEffect(() => {
     const intervalId = window.setInterval(() => {
       setCurrentTime(Date.now())
     }, 125)
-
-    return () => {
-      window.clearInterval(intervalId)
-    }
-  }, [])
-
-  useEffect(() => {
-    const intervalId = window.setInterval(() => {
-      setHeadlineIndex((currentIndex) => (currentIndex + 1) % earnedHeadlines.length)
-    }, earnedHeadlineIntervalMs)
 
     return () => {
       window.clearInterval(intervalId)

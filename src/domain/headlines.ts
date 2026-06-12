@@ -24,3 +24,8 @@ export function getEarnedHeadline(index: number): string {
   const headline = earnedHeadlines[normalizedIndex]
   return headline ?? "지금까지 번 돈"
 }
+
+export function getEarnedHeadlineAt(currentTimeMs: number, startTimeMs: number): string {
+  const elapsedMs = Math.max(0, currentTimeMs - startTimeMs)
+  return getEarnedHeadline(Math.floor(elapsedMs / earnedHeadlineIntervalMs))
+}
