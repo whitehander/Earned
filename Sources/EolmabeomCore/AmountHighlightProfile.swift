@@ -32,14 +32,14 @@ public struct AmountHighlightProfile: Equatable {
     }
 
     public static let defaultValue = AmountHighlightProfile(
-        highlightRed: 0.43,
-        highlightGreen: 0.66,
+        highlightRed: 0.58,
+        highlightGreen: 0.78,
         highlightBlue: 1,
-        textCoreWidth: 0.24,
-        textFeatherWidth: 0.62,
-        glowInnerWidth: 0.28,
-        glowOuterWidth: 0.68,
-        glowPeakOpacity: 0.38,
-        glowEdgeOpacity: 0.05
+        textCoreWidth: 0.32,
+        textFeatherWidth: 0.82,
+        glowInnerWidth: 0.4,
+        glowOuterWidth: 0.88,
+        glowPeakOpacity: 0.3,
+        glowEdgeOpacity: 0.08
     )
 }
