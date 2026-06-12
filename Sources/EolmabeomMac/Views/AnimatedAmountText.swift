@@ -1,10 +1,12 @@
 import SwiftUI
+import EolmabeomCore
 
 struct AnimatedAmountText: View {
     let label: String
     let fontSize: CGFloat
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private let highlightProfile = AmountHighlightProfile.defaultValue
 
     var body: some View {
         TimelineView(.animation) { timeline in
@@ -45,8 +47,8 @@ struct AnimatedAmountText: View {
 
     private func textGradient(progress: Double) -> LinearGradient {
         let center = min(max(progress, 0), 1)
-        let coreWidth = 0.07
-        let featherWidth = 0.24
+        let coreWidth = highlightProfile.textCoreWidth
+        let featherWidth = highlightProfile.textFeatherWidth
         let stops = [
             Gradient.Stop(color: amountBase, location: 0),
             Gradient.Stop(color: amountBase, location: max(0, center - featherWidth)),
@@ -65,13 +67,16 @@ struct AnimatedAmountText: View {
 
     private func glowGradient(progress: Double) -> LinearGradient {
         let center = min(max(progress, 0), 1)
+        let edge = highlightProfile.glowEdgeOpacity
+        let shoulder = highlightProfile.glowEdgeOpacity * 1.6
+        let peak = highlightProfile.glowPeakOpacity
         let stops = [
-            Gradient.Stop(color: amountHighlight.opacity(0.16), location: 0),
-            Gradient.Stop(color: amountHighlight.opacity(0.22), location: max(0, center - 0.34)),
-            Gradient.Stop(color: amountHighlight.opacity(0.78), location: max(0, center - 0.1)),
-            Gradient.Stop(color: amountHighlight.opacity(0.9), location: min(1, center + 0.1)),
-            Gradient.Stop(color: amountHighlight.opacity(0.22), location: min(1, center + 0.34)),
-            Gradient.Stop(color: amountHighlight.opacity(0.16), location: 1),
+            Gradient.Stop(color: amountHighlight.opacity(edge), location: 0),
+            Gradient.Stop(color: amountHighlight.opacity(shoulder), location: max(0, center - highlightProfile.glowOuterWidth)),
+            Gradient.Stop(color: amountHighlight.opacity(peak), location: max(0, center - highlightProfile.glowInnerWidth)),
+            Gradient.Stop(color: amountHighlight.opacity(peak), location: min(1, center + highlightProfile.glowInnerWidth)),
+            Gradient.Stop(color: amountHighlight.opacity(shoulder), location: min(1, center + highlightProfile.glowOuterWidth)),
+            Gradient.Stop(color: amountHighlight.opacity(edge), location: 1),
         ]
 
         return LinearGradient(
@@ -113,7 +118,11 @@ struct AnimatedAmountText: View {
     }
 
     private var amountHighlight: Color {
-        Color(red: 0.06, green: 0.38, blue: 1)
+        Color(
+            red: highlightProfile.highlightRed,
+            green: highlightProfile.highlightGreen,
+            blue: highlightProfile.highlightBlue
+        )
     }
 
     private var amountBase: Color {
