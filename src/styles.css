@@ -148,7 +148,7 @@ h2 {
   border-radius: 999px;
   padding: 0 15px;
   background: var(--icon-bg);
-  color: var(--text-strong);
+  color: var(--icon-text);
   font-size: 14px;
   font-weight: 900;
   text-decoration: none;
@@ -160,6 +160,12 @@ h2 {
 .download-link:hover {
   box-shadow: 0 8px 18px rgba(0, 111, 238, 0.22);
   transform: translateY(-1px);
+}
+
+.download-link:focus-visible,
+.icon-button:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 3px;
 }
 
 .icon-button {
